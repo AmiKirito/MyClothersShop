@@ -1,0 +1,25 @@
+﻿@model HomeDetailsViewModel
+
+@{
+    ViewBag.Title = "Cloth Details";
+    var photoPath = "~/images/" + (Model.Cloth.PhotoPath ?? "original_images/noimage.png");
+}
+
+<div class="card-deck">
+    <div class="card mt-2">
+        <div class="card-header alert alert-primary text-center">
+            <h1>@Model.Cloth.Title</h1>
+        </div>
+        <div class="card-body">
+            <img class="card-img-top" src="@photoPath" asp-append-version="true" style="width:auto%;" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-info m-3">
+            <h1>Price: @Model.Cloth.Price  грн.</h1>
+        </div>
+        <div class="alert alert-secondary m-3">
+            <h1>Description: @Model.Cloth.Description</h1>
+        </div>
+    </div>
+</div>
