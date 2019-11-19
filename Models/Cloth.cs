@@ -7,11 +7,11 @@ namespace MyClothersShop.Models
 {
     public class Cloth
     {
-        public int Id { get; set; }
+        public int ClothId { get; set; }
         public string Title { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
-        public string PhotoPath { get; set; }
+        public List<ClothImages> Images { get; set; }
     }
     public enum BootstrapAlertType
     {

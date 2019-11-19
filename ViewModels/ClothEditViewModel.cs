@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyClothersShop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace MyClothersShop.ViewModels
 {
     public class ClothEditViewModel : ClothCreateViewModel
     {
-        public int Id { get; set; }
-        public string ExistingPhotoPath { get; set; }
+        public int ClothId { get; set; }
+        public List<ExistingImage> ExistingPaths { get; set; }
     }
 }

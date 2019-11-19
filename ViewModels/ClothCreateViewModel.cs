@@ -17,6 +17,6 @@ namespace MyClothersShop.ViewModels
         [Required]
         [MaxLength(200, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Description { get; set; }
-        public IFormFile Photo { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }

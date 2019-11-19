@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Cloth Details";
-    var photoPath = "~/images/" + (Model.Cloth.PhotoPath ?? "original_images/noimage.png");
 }
 
 <div class="card-deck">
@@ -11,12 +10,17 @@
             <h1>@Model.Cloth.Title</h1>
         </div>
         <div class="card-body">
-            <img class="card-img-top" src="@photoPath" asp-append-version="true" style="width:auto%;" />
+            @foreach (ClothImages image in Model.Cloth.Images)  
+            {
+                var photoPath = "~/images/" + (image.Image.PhotoPath ?? "original_images/noimage.png");
+                <img class="card-img-top m-1" src="@photoPath" asp-append-version="true" style="width:auto;" />
+            }
+        <h1>@Model.Cloth.Images.First().Image.ImageId.ToString()</h1>
         </div>
     </div>
     <div class="col-md-4">
         <div class="alert alert-info m-3">
-            <h1>Price: @Model.Cloth.Price  грн.</h1>
+            <h1>Price: @Model.Cloth.Price грн.</h1>
         </div>
         <div class="alert alert-secondary m-3">
             <h1>Description: @Model.Cloth.Description</h1>
