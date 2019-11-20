@@ -9,6 +9,6 @@ namespace MyClothersShop.ViewModels
     public class ClothEditViewModel : ClothCreateViewModel
     {
         public int ClothId { get; set; }
-        public List<ExistingImage> ExistingPaths { get; set; }
+        public List<Image> ExistingImages { get; set; }
     }
 }

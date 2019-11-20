@@ -13,11 +13,9 @@ namespace MyClothersShop.Models
 
         }
 
-        public DbSet<ClothImages> ClothersImages { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Cloth> Clothers { get; set; }
         
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Seed();

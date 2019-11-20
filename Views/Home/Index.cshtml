@@ -1,13 +1,13 @@
-﻿@model AllDataViewModel
+﻿@model Cloth[]
 
 @{
     ViewBag.Title = "Clothers List";
     
 }
 <div class="card-deck">
-    @foreach (Cloth cloth in Model.clothers)
+    @foreach (Cloth cloth in Model)
     {
-        var photoPath = "~/images/" + (cloth.Images.First().Image.PhotoPath ?? "original_images/noimage.png");
+        var photoPath = "~/images/" + (cloth.Images.First().PhotoPath ?? "original_images/noimage.png");
 
         <div class="card m-3" style="min-width: 18rem; max-width:30.5%">
             <div class="card-header text-center">

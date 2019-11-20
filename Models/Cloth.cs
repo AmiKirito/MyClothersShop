@@ -11,7 +11,7 @@ namespace MyClothersShop.Models
         public string Title { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
-        public List<ClothImages> Images { get; set; }
+        public List<Image> Images { get; set; }
     }
     public enum BootstrapAlertType
     {

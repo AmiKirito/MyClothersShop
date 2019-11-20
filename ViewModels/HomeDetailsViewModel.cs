@@ -9,7 +9,6 @@ namespace MyClothersShop.ViewModels
 {
     public class HomeDetailsViewModel
     {
-        //public AllDataViewModel allData { get; set; }
         public Cloth Cloth { get; set; }
         public string Title { get; set; }
     }

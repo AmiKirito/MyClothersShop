@@ -10,60 +10,58 @@ namespace MyClothersShop.Models
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ClothImages>()
-                .HasKey(cl => new { cl.ImageId, cl.ClothId });
-            modelBuilder.Entity<ClothImages>()
-                .HasOne(cl => cl.Cloth)
-                .WithMany(c => c.Images)
-                .HasForeignKey(cl => cl.ClothId);
-            modelBuilder.Entity<ClothImages>()
-                .HasOne(cl => cl.Image)
-                .WithMany(c => c.Clothers)
-                .HasForeignKey(bc => bc.ClothId);
+            modelBuilder.Entity<Image>()
+                .HasOne<Cloth>(c => c.Cloth)
+                .WithMany(i => i.Images)
+                .HasForeignKey(c => c.ClothId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            var clothers = new List<Cloth>
-            {
-                new Cloth
-                {
-                    ClothId = 1,
-                    Title = "T-Short",
-                    Price = 300,
-                    Description = "Description about T-Short"
-                },
-                new Cloth
-                {
-                    ClothId = 2,
-                    Title = "Jeans",
-                    Price = 300,
-                    Description = "Description about Jeans"
-                }
-            };
-            var images = new List<Image>
-            {
-                new Image
-                {
-                    ImageId = 1,
-                    PhotoPath = "original_images/jeans.jpg"
-                },
-                new Image
-                {
-                    ImageId = 2,
-                    PhotoPath = "original_images/logo.png"
-                }
-            };
+            modelBuilder.Entity<Cloth>()
+                .HasData(
+                    new Cloth
+                    {
+                        ClothId = 1,
+                        Title = "T-Short",
+                        Price = 250,
+                        Description = "You just can wear it anywhere :)"
 
-            var clothersImages = new List<ClothImages>
-            {
-                new ClothImages{ImageId = 1, ClothId = 1},
-                new ClothImages{ImageId = 1, ClothId = 2},
-                new ClothImages{ImageId = 2, ClothId = 1},
-                new ClothImages{ImageId = 2, ClothId = 2}
-            };
-
-
-            modelBuilder.Entity<ClothImages>().HasData(clothersImages);
-            modelBuilder.Entity<Cloth>().HasData(clothers);
-            modelBuilder.Entity<Image>().HasData(images);
+                    },
+                    new Cloth
+                    {
+                        ClothId = 2,
+                        Title = "Jeans",
+                        Price = 500,
+                        Description = "Really comfortable and suits for any occasion"
+                    }
+                );
+           
+            modelBuilder.Entity<Image>()
+                .HasData(
+                    new Image
+                    {
+                        ImageId = 1,
+                        PhotoPath = "original_images/t-short.jpg",              
+                        ClothId = 1
+                    },
+                    new Image
+                    {
+                        ImageId = 2,
+                        PhotoPath = "original_images/jeans.jpg",
+                        ClothId = 2
+                    },
+                    new Image
+                    {
+                        ImageId = 3,
+                        PhotoPath = "original_images/logo.png",
+                        ClothId = 1
+                    },
+                    new Image
+                    {
+                        ImageId = 4,
+                        PhotoPath = "original_images/test.png",
+                        ClothId = 2
+                    }
+                );
         }
     }
 }

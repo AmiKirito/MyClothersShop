@@ -11,49 +11,46 @@ using System.Threading;
 using System.Threading.Tasks;
 using static MyClothersShop.Models.Enum;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyClothersShop.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppDbContext _dBContext;
+
         private readonly IClothRepository _clothRepository;
-        private readonly IClothRepository _imagesRepository;
-        private readonly IClothRepository _clothImagesRepository;
 
         private readonly IWebHostEnvironment hostingEnvironment;
 
-        public HomeController(IClothRepository clothRepository, IClothRepository imagesRepository,
-                              IClothRepository clothImagesRepository, IWebHostEnvironment hostingEnvironment)
+        public HomeController(IClothRepository clothRepository, AppDbContext dBContext,
+                              IWebHostEnvironment hostingEnvironment)
         {
+            _dBContext = dBContext;
             _clothRepository = clothRepository;
-            _imagesRepository = imagesRepository;
-            _clothImagesRepository = clothImagesRepository;
             this.hostingEnvironment = hostingEnvironment;
         }
         public ViewResult Index()
         {
-            AllDataViewModel allDataViewModel = GetAllData();
-
-            return View(allDataViewModel);
-        }
-
-        private AllDataViewModel GetAllData()
-        {
-            return new AllDataViewModel()
-            {
-                clothers = _clothRepository.GetAllClothers().ToList(),
-                images = _imagesRepository.GetAllImages().ToList(),
-                clothImages = _clothImagesRepository.GetAllClothImages().ToList()
-            };
+            var model = _dBContext.Clothers
+                        .Include(c => c.Images)
+                        .ToArray();
+            
+            return View(model);
         }
 
         public ViewResult Details(int? id)
         {
+            var model = _dBContext.Clothers
+                        .Include(c => c.Images)
+                        .ToArray();
             HomeDetailsViewModel allDataViewModel = new HomeDetailsViewModel()
             {
                 Title = "Cloth Details",   
             };
-            allDataViewModel.Cloth = _clothRepository.GetCloth(id ?? 1);
+
+            allDataViewModel.Cloth = model.Where(x => x.ClothId == id).FirstOrDefault();
+
             return View(allDataViewModel);
         }
         [HttpGet]
@@ -66,7 +63,7 @@ namespace MyClothersShop.Controllers
         {
             if(ModelState.IsValid)
             {
-                List<ClothImages> uniquieFileNames = ProcessUploadedFile(model);
+                List<Image> uniquieFileNames = ProcessUploadedFile(model);
                 Cloth cloth = new Cloth
                 {
                     Title = model.Title,
@@ -80,9 +77,18 @@ namespace MyClothersShop.Controllers
             }
             return View();
         }
+        public IActionResult Delete(int id)
+        {
+            _clothRepository.Delete(id);
+            return RedirectToAction("index");
+        }
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            var model = _dBContext.Clothers
+                        .Include(c => c.Images)
+                        .ToArray();
+
             Cloth cloth = _clothRepository.GetCloth(id);
 
             ClothEditViewModel clothEditViewModel = new ClothEditViewModel
@@ -91,14 +97,12 @@ namespace MyClothersShop.Controllers
                 Title = cloth.Title,
                 Price = cloth.Price,
                 Description = cloth.Description,
+                ExistingImages = new List<Image>()
             };
 
-            ExistingImage existing = null;
-
-            foreach (ClothImages image in cloth.Images)
+            foreach (var image in model.Where(x => x.ClothId == id).FirstOrDefault().Images)
             {
-                //  existing.ExistingPhotoPath = image.PhotoPath;
-                clothEditViewModel.ExistingPaths.Add(existing);
+                clothEditViewModel.ExistingImages.Add(image);
             }
 
             return View(clothEditViewModel);
@@ -127,21 +131,17 @@ namespace MyClothersShop.Controllers
             }
             return View();
         }
-        public IActionResult Delete(int id)
+        private List<Image> ProcessUploadedFile(ClothCreateViewModel model)
         {
-            _clothRepository.Delete(id);
-            return RedirectToAction("index");
-        }
-        private List<ClothImages> ProcessUploadedFile(ClothCreateViewModel model)
-        {
-            List<ClothImages> uniqueImages = null;
-            ClothImages image = null;
-            string uniquieFileName = null;
+            List<Image> uniqueImages = new List<Image>();
 
             if (model.Photos != null && model.Photos.Count > 0)
             {
                 foreach (IFormFile photo in model.Photos)
                 {
+                    Image image = new Image();
+                    string uniquieFileName = "";
+
                     string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
                     uniquieFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
                     string filePath = Path.Combine(uploadsFolder, uniquieFileName);
@@ -149,6 +149,7 @@ namespace MyClothersShop.Controllers
                     {
                         photo.CopyTo(fileStream);
                     }
+                    image.PhotoPath = uniquieFileName;
                     uniqueImages.Add(image);
                 }
             }

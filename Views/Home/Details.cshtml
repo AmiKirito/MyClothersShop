@@ -10,12 +10,11 @@
             <h1>@Model.Cloth.Title</h1>
         </div>
         <div class="card-body">
-            @foreach (ClothImages image in Model.Cloth.Images)  
+            @foreach (Image image in Model.Cloth.Images)  
             {
-                var photoPath = "~/images/" + (image.Image.PhotoPath ?? "original_images/noimage.png");
+                var photoPath = "~/images/" + (image.PhotoPath.ToString() ?? "original_images/noimage.png");
                 <img class="card-img-top m-1" src="@photoPath" asp-append-version="true" style="width:auto;" />
             }
-        <h1>@Model.Cloth.Images.First().Image.ImageId.ToString()</h1>
         </div>
     </div>
     <div class="col-md-4">

@@ -21,10 +21,13 @@ namespace MyClothersShop.Models
         public Cloth Add(Cloth cloth)
         {
             context.Clothers.Add(cloth);
+            foreach (var image in cloth.Images)
+            {
+                context.Images.Add(image);
+            }
             context.SaveChanges();
             return cloth;
         }
-
         public Cloth Delete(int id)
         {
             Cloth cloth = context.Clothers.Find(id);
@@ -32,11 +35,11 @@ namespace MyClothersShop.Models
             {
                 if (cloth.Images != null)
                 {
-                    //foreach (Image image in cloth.Images)
-                    //{
-                    //    string filePath = System.IO.Path.Combine(_webHostEnvironment.WebRootPath, "images", image.PhotoPath);
-                    //    System.IO.File.Delete(filePath);
-                    //}
+                    foreach (Image image in cloth.Images)
+                    {
+                        string filePath = System.IO.Path.Combine(_webHostEnvironment.WebRootPath, "images", image.PhotoPath);
+                        System.IO.File.Delete(filePath);
+                    }
                 }
                 context.Clothers.Remove(cloth);
                 context.SaveChanges();
@@ -56,19 +59,19 @@ namespace MyClothersShop.Models
             return context.Clothers.Find(Id);
         }
 
-        public IEnumerable<Cloth> GetAllClothers()
+        public Cloth[] GetAllClothers()
         {
-            return context.Clothers;
+            var model = context.Clothers;
+            foreach (Cloth cloth in model)
+            {
+                cloth.Images = context.Images.Where(x => x.ClothId == cloth.ClothId).ToList();
+            }
+            return model.ToArray();
         }
 
         public IEnumerable<Image> GetAllImages()
         {
             return context.Images;
-        }
-
-        public IEnumerable<ClothImages> GetAllClothImages()
-        {
-            return context.ClothersImages;
         }
     }
 }

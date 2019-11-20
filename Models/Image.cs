@@ -10,6 +10,7 @@ namespace MyClothersShop.Models
     {
         public int ImageId { get; set; }
         public string PhotoPath { get; set; }
-        public List<ClothImages> Clothers { get; set; }
+        public int ClothId { get; set; }
+        public Cloth Cloth { get; set; }
     }
 }
