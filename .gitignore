@@ -340,4 +340,5 @@ ASALocalRun/
 healthchecksdb
 
 # Images Photos
-wwwroot/images/
+.jpg
+.png
