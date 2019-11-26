@@ -10,9 +10,10 @@ namespace MyClothersShop.Models
     {
         Cloth GetCloth(int Id);
         Cloth[] GetAllClothers();
-        IEnumerable<Image> GetAllImages();        
+        IEnumerable<Image> GetAllImages();      
         Cloth Add(Cloth cloth);
         Cloth Update(Cloth clothChange);
         Cloth Delete(int id);
+        Image DeleteImage(int id);
     }
 }

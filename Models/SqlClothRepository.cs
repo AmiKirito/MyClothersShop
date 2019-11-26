@@ -47,6 +47,22 @@ namespace MyClothersShop.Models
             return cloth;
         }
 
+        public Image DeleteImage(int id)
+        {
+            Image image = context.Images.Find(id);
+
+            if (image != null)
+            {
+                string filePath = System.IO.Path.Combine(_webHostEnvironment.WebRootPath, "images", image.PhotoPath);
+                System.IO.File.Delete(filePath);
+            }
+
+            context.Images.Remove(image);
+            context.SaveChanges();
+
+            return image;
+        }
+
         public Cloth Update(Cloth clothChange)
         {
             var cloth = context.Clothers.Attach(clothChange);

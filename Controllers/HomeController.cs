@@ -21,13 +21,16 @@ namespace MyClothersShop.Controllers
 
         private readonly IClothRepository _clothRepository;
 
+        private readonly IClothRepository _imageRepository;
+
         private readonly IWebHostEnvironment hostingEnvironment;
 
         public HomeController(IClothRepository clothRepository, AppDbContext dBContext,
-                              IWebHostEnvironment hostingEnvironment)
+                               IClothRepository imageRepository, IWebHostEnvironment hostingEnvironment)
         {
             _dBContext = dBContext;
             _clothRepository = clothRepository;
+            _imageRepository = imageRepository;
             this.hostingEnvironment = hostingEnvironment;
         }
         public ViewResult Index()
@@ -82,6 +85,11 @@ namespace MyClothersShop.Controllers
             _clothRepository.Delete(id);
             return RedirectToAction("index");
         }
+        public IActionResult DeleteImage(int imageId, int clothId)
+        {
+            _imageRepository.DeleteImage(imageId);
+            return RedirectToAction("edit", new { id = clothId });
+        }
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -117,15 +125,10 @@ namespace MyClothersShop.Controllers
                 cloth.Price = model.Price;
                 cloth.Description = model.Description;
 
-                //if (model.Photo != null)
-                //{
-                //    if (model.ExistingPhotoPath != null)
-                //    {
-                //        string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
-                //        System.IO.File.Delete(filePath);
-                //    }
-                //    cloth.PhotoPath = ProcessUploadedFile(model);
-                //}
+                if (model.Photos != null)
+                {
+                    cloth.Images = ProcessUploadedFile(model);
+                }
                 _clothRepository.Update(cloth);
                 return RedirectToAction("index");
             }

@@ -3,26 +3,45 @@
 @{
     ViewBag.Title = "Cloth Details";
 }
+<style>
+  .zoom {
+    transition: transform .2s;
+    margin: 0 auto;
+}
+  .zoom:hover {
+      z-index: 2;   
+      transform: scale(2);
+  }
 
-<div class="card-deck">
-    <div class="card mt-2">
-        <div class="card-header alert alert-primary text-center">
-            <h1>@Model.Cloth.Title</h1>
+
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-primary text-center m-2">
+                <h1>@Model.Cloth.Title</h1>
+            </div>
+            <div class="container">
+                <div class="row">
+                    @foreach (Image image in Model.Cloth.Images)
+                    {
+                        var photoPath = "~/images/" + (image.PhotoPath.ToString() ?? "original_images/noimage.png");
+                        <div class="zoom">
+                            <img style="height:200px;border-radius: 0.18rem; margin-bottom: 20px" src="@photoPath" asp-append-version="true" />
+                        </div>
+                    }
+                </div>
+            </div>
+
         </div>
-        <div class="card-body">
-            @foreach (Image image in Model.Cloth.Images)  
-            {
-                var photoPath = "~/images/" + (image.PhotoPath.ToString() ?? "original_images/noimage.png");
-                <img class="card-img-top m-1" src="@photoPath" asp-append-version="true" style="width:auto;" />
-            }
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="alert alert-info m-3">
-            <h1>Price: @Model.Cloth.Price грн.</h1>
-        </div>
-        <div class="alert alert-secondary m-3">
-            <h1>Description: @Model.Cloth.Description</h1>
+        <div class="col">
+            <div class="alert alert-info m-2">
+                <h1>Price: @Model.Cloth.Price грн.</h1>
+            </div>
+            <div class="alert alert-secondary m-2">
+                <h1>Description: @Model.Cloth.Description</h1>
+            </div>
         </div>
     </div>
 </div>
+    
